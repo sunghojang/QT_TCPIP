@@ -67,7 +67,7 @@ Client::Client(QWidget *parent)
     hostLineEdit = new QLineEdit(ipAddress);
     portLineEdit = new QLineEdit;
     portLineEdit->setValidator(new QIntValidator(1, 65535, this));
-
+    portLineEdit->setText("4002");
     hostLabel->setBuddy(hostLineEdit);
     portLabel->setBuddy(portLineEdit);
 
@@ -76,7 +76,6 @@ Client::Client(QWidget *parent)
 
     getFortuneButton = new QPushButton(tr("Get Fortune"));
     getFortuneButton->setDefault(true);
-    getFortuneButton->setEnabled(false);
 
     quitButton = new QPushButton(tr("Quit"));
 
@@ -127,7 +126,7 @@ Client::Client(QWidget *parent)
         networkSession = new QNetworkSession(config, this);
         connect(networkSession, SIGNAL(opened()), this, SLOT(sessionOpened()));
 
-        getFortuneButton->setEnabled(false);
+        //getFortuneButton->setEnabled(false);
         statusLabel->setText(tr("Opening network session."));
         networkSession->open();
     }
