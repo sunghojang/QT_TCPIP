@@ -6,6 +6,7 @@
 
 QT       += core gui
 QT           += network
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = server
@@ -18,6 +19,7 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
+
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/network/fortuneserver

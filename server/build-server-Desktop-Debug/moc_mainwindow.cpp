@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Thu Aug 16 16:28:43 2018
+** Created: Fri Aug 17 12:31:15 2018
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_Server[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   14, // methods
+       4,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -33,12 +33,15 @@ static const uint qt_meta_data_Server[] = {
  // slots: signature, parameters, type, tag, flags
        8,    7,    7,    7, 0x08,
       24,    7,    7,    7, 0x08,
+      38,    7,    7,    7, 0x08,
+      52,    7,    7,    7, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_Server[] = {
     "Server\0\0sessionOpened()\0sendFortune()\0"
+    "readFortune()\0disconnected_client()\0"
 };
 
 void Server::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -49,6 +52,8 @@ void Server::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         switch (_id) {
         case 0: _t->sessionOpened(); break;
         case 1: _t->sendFortune(); break;
+        case 2: _t->readFortune(); break;
+        case 3: _t->disconnected_client(); break;
         default: ;
         }
     }
@@ -87,9 +92,9 @@ int Server::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 2)
+        if (_id < 4)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 2;
+        _id -= 4;
     }
     return _id;
 }

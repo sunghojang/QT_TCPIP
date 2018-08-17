@@ -76,12 +76,14 @@ Client::Client(QWidget *parent)
 
     getFortuneButton = new QPushButton(tr("Get Fortune"));
     getFortuneButton->setDefault(true);
+    putTextButton = new QPushButton(tr("SEND"));
 
     quitButton = new QPushButton(tr("Quit"));
 
     buttonBox = new QDialogButtonBox;
     buttonBox->addButton(getFortuneButton, QDialogButtonBox::ActionRole);
     buttonBox->addButton(quitButton, QDialogButtonBox::RejectRole);
+    buttonBox->addButton(putTextButton, QDialogButtonBox::ActionRole);
 
     tcpSocket = new QTcpSocket(this);
 
@@ -91,6 +93,8 @@ Client::Client(QWidget *parent)
             this, SLOT(enableGetFortuneButton()));
     connect(getFortuneButton, SIGNAL(clicked()),
             this, SLOT(requestNewFortune()));
+    connect(putTextButton, SIGNAL(clicked()),
+            this, SLOT(sendFortune()));
     connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
     connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(readFortune()));
     connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),
@@ -134,6 +138,7 @@ Client::Client(QWidget *parent)
 
 void Client::requestNewFortune()
 {
+    qDebug()<<"requestNewFortune";
     getFortuneButton->setEnabled(false);
     blockSize = 0;
     tcpSocket->abort();
@@ -160,6 +165,7 @@ void Client::readFortune()
     in >> nextFortune;
 
     if (nextFortune == currentFortune) {
+        qDebug("re new fortune");
         QTimer::singleShot(0, this, SLOT(requestNewFortune()));
         return;
     }
@@ -222,4 +228,25 @@ void Client::sessionOpened()
                             "Fortune Server example as well."));
 
     enableGetFortuneButton();
+}
+void Client::sendFortune()
+{
+    QByteArray block;
+    QDataStream out(&block, QIODevice::WriteOnly);
+    QStringList fortunes ;
+    QString temp;
+    fortunes << "wwwdsfefef" <<"efwef";
+    out.setVersion(QDataStream::Qt_4_0);
+    out << (quint16)0;
+    temp = fortunes.at(qrand() % fortunes.size());
+    out << temp;
+    out.device()->seek(0);
+    out << (quint16)(block.size() - sizeof(quint16));
+
+    //connect(tcpSocket, SIGNAL(disconnected()), tcpSocket, SLOT(deleteLater()));
+
+    tcpSocket->write(block);
+    qDebug()<<tcpSocket->state();
+    qDebug()<<temp;
+    //tcpSocket->disconnectFromHost();
 }

@@ -51,7 +51,7 @@ Server::Server(QWidget *parent)
     statusLabel = new QLabel;
     quitButton = new QPushButton(tr("Quit"));
     quitButton->setAutoDefault(false);
-
+    blockSize = 0;
     QNetworkConfigurationManager manager;
     if (manager.capabilities() & QNetworkConfigurationManager::NetworkSessionRequired) {
         // Get saved network configuration
@@ -83,6 +83,7 @@ Server::Server(QWidget *parent)
                  << tr("You might have mail.")
                  << tr("You cannot kill time without injuring eternity.")
                  << tr("Computers are not intelligent. They only think they are.");
+
 
         connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
         connect(tcpServer, SIGNAL(newConnection()), this, SLOT(sendFortune()));
@@ -125,6 +126,8 @@ void Server::sessionOpened()
         close();
         return;
     }
+
+
     QString ipAddress;
     QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
     // use the first non-localhost IPv4 address
@@ -145,6 +148,7 @@ void Server::sessionOpened()
 
 void Server::sendFortune()
 {
+    qDebug("new connection");
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
@@ -153,10 +157,40 @@ void Server::sendFortune()
     out.device()->seek(0);
     out << (quint16)(block.size() - sizeof(quint16));
 
-    QTcpSocket *clientConnection = tcpServer->nextPendingConnection();
+    clientConnection = tcpServer->nextPendingConnection();
     connect(clientConnection, SIGNAL(disconnected()),
-            clientConnection, SLOT(deleteLater()));
-
+            this, SLOT(disconnected_client()));
+    connect(clientConnection, SIGNAL(readyRead()),
+            this, SLOT(readFortune()));
     clientConnection->write(block);
-    clientConnection->disconnectFromHost();
+    //clientConnection->disconnectFromHost();
+
+}
+//add read soket
+void Server::readFortune()
+{
+qDebug()<<clientConnection->state();
+    QDataStream in(clientConnection);
+    in.setVersion(QDataStream::Qt_4_0);
+    qDebug()<<blockSize;
+    if (blockSize == 0) {
+        if (clientConnection->bytesAvailable() < (int)sizeof(quint16))
+            return;
+
+        in >> blockSize;
+    }
+    qDebug()<<blockSize;
+    if (clientConnection->bytesAvailable() < blockSize)
+        return;
+    qDebug()<<blockSize;
+    QString nextFortune;
+    in >> nextFortune;
+
+    currentFortune = nextFortune;
+    qDebug()<<blockSize;
+    qDebug()<<currentFortune;
+
+}
+void Server::disconnected_client(){
+    qDebug()<<"disconnected";
 }

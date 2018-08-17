@@ -42,7 +42,8 @@
 #define SERVER_H
 
 #include <QDialog>
-
+#include <QTcpSocket>
+#include <QDebug>
 class QLabel;
 class QPushButton;
 class QTcpServer;
@@ -58,13 +59,22 @@ public:
 private slots:
     void sessionOpened();
     void sendFortune();
-
+    //add read soket
+    void readFortune();
+    void disconnected_client();
 private:
     QLabel *statusLabel;
     QPushButton *quitButton;
     QTcpServer *tcpServer;
     QStringList fortunes;
     QNetworkSession *networkSession;
+    QString currentFortune;
+
+
+    //add read soket
+    QTcpSocket *tcpSocket;
+    quint16 blockSize;
+    QTcpSocket *clientConnection;
 };
 
 #endif
