@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Fri Aug 17 15:47:19 2018
+** Created: Tue Aug 21 11:01:05 2018
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       4,   14, // methods
+       5,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -35,6 +35,7 @@ static const uint qt_meta_data_MainWindow[] = {
       38,   11,   11,   11, 0x08,
       54,   11,   11,   11, 0x08,
       79,   11,   11,   11, 0x08,
+      91,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -42,7 +43,7 @@ static const uint qt_meta_data_MainWindow[] = {
 static const char qt_meta_stringdata_MainWindow[] = {
     "MainWindow\0\0on_StartClicked_clicked()\0"
     "newConnection()\0slotClientDisconnected()\0"
-    "readyRead()\0"
+    "readyRead()\0sendFortune()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -55,6 +56,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 1: _t->newConnection(); break;
         case 2: _t->slotClientDisconnected(); break;
         case 3: _t->readyRead(); break;
+        case 4: _t->sendFortune(); break;
         default: ;
         }
     }
@@ -93,9 +95,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 5)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 5;
     }
     return _id;
 }

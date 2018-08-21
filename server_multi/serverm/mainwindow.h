@@ -25,6 +25,7 @@ private slots:
     void newConnection();
     void slotClientDisconnected();
     void readyRead();
+    void sendFortune();
 private:
     Ui::MainWindow *ui;
     QTcpServer* server;

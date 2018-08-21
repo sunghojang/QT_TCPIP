@@ -52,6 +52,7 @@ void MainWindow::newConnection()
 
     connect(client, SIGNAL(disconnected()), this, SLOT(slotClientDisconnected()));
     connect(client, SIGNAL(readyRead()) , this, SLOT(readyRead()));
+
 }
 void MainWindow::slotClientDisconnected()
 {
@@ -69,13 +70,30 @@ void MainWindow::slotClientDisconnected()
     }
 }
 
+void MainWindow::sendFortune()
+{
+    qDebug("send commend");
+    QByteArray block;
+    QDataStream out(&block, QIODevice::WriteOnly);
+    QStringList fortunes;
+    fortunes << "ssddjjtteeii";
+    out.setVersion(QDataStream::Qt_4_0);
+    out << (quint16)0;
+    out << fortunes.at(qrand() % fortunes.size());
+    out.device()->seek(0);
+    out << (quint16)(block.size() - sizeof(quint16));
 
+    client->write(block);
+    //clientConnection->disconnectFromHost();
+
+}
 void MainWindow::readyRead()
 {
     QByteArray data = client->readAll();
     QStringList cmmline ;
     cmmline.append(data.data());
     qDebug()<<data.toHex();
+    sendFortune();
    //qDebug()<<cmmline;
    // qDebug("%d",data.toHex());
 }
