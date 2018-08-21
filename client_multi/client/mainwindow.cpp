@@ -164,11 +164,11 @@ void Client::readFortune()
     QString nextFortune;
     in >> nextFortune;
     qDebug()<<nextFortune;
-    if (nextFortune == currentFortune) {
-        qDebug("re new fortune");
-        QTimer::singleShot(0, this, SLOT(requestNewFortune()));
-        return;
-    }
+//    if (nextFortune == currentFortune) {
+//        qDebug("re new fortune");
+//        QTimer::singleShot(0, this, SLOT(requestNewFortune()));
+//        return;
+//    }
 
     currentFortune = nextFortune;
     statusLabel->setText(currentFortune);
