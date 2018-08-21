@@ -78,7 +78,7 @@ void MainWindow::slotClientDisconnected()
 void MainWindow::sendFortune()
 {
     qDebug()<<"void MainWindow::sendFortune()";
-
+    //test
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
     QStringList fortunes;

@@ -1,6 +1,13 @@
 #!/bin/bash
-
-git add * 
-git commit -m "$1"
-git fetch
-git push
+if [ $1-z ]; then
+	echo "Please input  1 argument string \nexmaple: sh gitpush \"add all\""
+else
+	git init
+	git config --global user.name "sunghojang"
+	git config --global user.email "sdjtei@gmail.com"
+	git remote add origin https://github.com/sunghojang/QT_TCPIP.git
+	git add * 
+	git commit -m "$1"
+	git fetch
+	git push
+fi
