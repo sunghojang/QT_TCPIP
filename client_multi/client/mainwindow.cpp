@@ -233,12 +233,10 @@ void Client::sendFortune()
 {
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
-    QStringList fortunes ;
-    QString temp;
-    fortunes << "wwwdsfefef" <<"efwef";
+
     //out.setVersion(QDataStream::Qt_4_0);
     //out << (quint16)0;
-    temp = fortunes.at(qrand() % fortunes.size());
+
     out << 0xf1f2f3fe;
     //out.device()->seek(0);
     //out << (quint16)(block.size() - sizeof(quint16));
@@ -247,6 +245,5 @@ void Client::sendFortune()
 
     tcpSocket->write(block);
     qDebug()<<tcpSocket->state();
-    qDebug()<<temp;
     //tcpSocket->disconnectFromHost();
 }

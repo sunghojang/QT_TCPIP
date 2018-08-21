@@ -76,6 +76,6 @@ void MainWindow::readyRead()
     QStringList cmmline ;
     cmmline.append(data.data());
     qDebug()<<data.toHex();
-    qDebug()<<cmmline;
+   //qDebug()<<cmmline;
    // qDebug("%d",data.toHex());
 }
