@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri Aug 17 15:51:16 2018
+** Created: Tue Aug 21 16:52:29 2018
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -34,6 +34,7 @@ public:
     QLabel *showStatusMessage;
     QLineEdit *port;
     QLabel *portlabel;
+    QLabel *showStatusMessage_2;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -50,13 +51,16 @@ public:
         StartClicked->setGeometry(QRect(245, 15, 80, 23));
         showStatusMessage = new QLabel(centralWidget);
         showStatusMessage->setObjectName(QString::fromUtf8("showStatusMessage"));
-        showStatusMessage->setGeometry(QRect(85, 60, 236, 16));
+        showStatusMessage->setGeometry(QRect(20, 60, 361, 16));
         port = new QLineEdit(centralWidget);
         port->setObjectName(QString::fromUtf8("port"));
         port->setGeometry(QRect(115, 15, 113, 23));
         portlabel = new QLabel(centralWidget);
         portlabel->setObjectName(QString::fromUtf8("portlabel"));
         portlabel->setGeometry(QRect(55, 20, 59, 15));
+        showStatusMessage_2 = new QLabel(centralWidget);
+        showStatusMessage_2->setObjectName(QString::fromUtf8("showStatusMessage_2"));
+        showStatusMessage_2->setGeometry(QRect(20, 85, 361, 16));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
@@ -81,6 +85,7 @@ public:
         showStatusMessage->setText(QApplication::translate("MainWindow", "state", 0, QApplication::UnicodeUTF8));
         port->setText(QApplication::translate("MainWindow", "4002", 0, QApplication::UnicodeUTF8));
         portlabel->setText(QApplication::translate("MainWindow", "Port", 0, QApplication::UnicodeUTF8));
+        showStatusMessage_2->setText(QApplication::translate("MainWindow", "state", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

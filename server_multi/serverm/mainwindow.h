@@ -19,12 +19,13 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
+    double blockSize;
 private slots:
     void on_StartClicked_clicked();
     void newConnection();
     void slotClientDisconnected();
     void readyRead();
+    void readyRead2();
     void sendFortune();
 private:
     Ui::MainWindow *ui;

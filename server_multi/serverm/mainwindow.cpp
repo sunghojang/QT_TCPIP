@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    blockSize = 0;
     server = new QTcpServer(this);
     connect(server , SIGNAL(newConnection()),this, SLOT(newConnection()));
 }
@@ -32,8 +33,10 @@ void MainWindow::on_StartClicked_clicked()
 
 void MainWindow::newConnection()
 {
+    qDebug()<<"void MainWindow::newConnection()";
     if (!connections.isEmpty())
     {
+        qDebug()<<"New Client connected\n";
         QByteArray msg = "New Client connected\n";
         foreach (QTcpSocket* connection, connections)
         {
@@ -52,10 +55,12 @@ void MainWindow::newConnection()
 
     connect(client, SIGNAL(disconnected()), this, SLOT(slotClientDisconnected()));
     connect(client, SIGNAL(readyRead()) , this, SLOT(readyRead()));
+   //connect(client, SIGNAL(readyRead()) , this, SLOT(readyRead2()));
 
 }
 void MainWindow::slotClientDisconnected()
 {
+    qDebug()<<"void MainWindow::slotClientDisconnected()";
     QTcpSocket* socket = static_cast<QTcpSocket*>(sender());
     QBuffer* buffer = buffers.take(socket);
     buffer->close();
@@ -72,7 +77,8 @@ void MainWindow::slotClientDisconnected()
 
 void MainWindow::sendFortune()
 {
-    qDebug("send commend");
+    qDebug()<<"void MainWindow::sendFortune()";
+
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
     QStringList fortunes;
@@ -93,7 +99,38 @@ void MainWindow::readyRead()
     QStringList cmmline ;
     cmmline.append(data.data());
     qDebug()<<data.toHex();
+    ui->showStatusMessage->setText(QString("%1").arg(data.toHex().constData()));
     sendFortune();
-   //qDebug()<<cmmline;
+
    // qDebug("%d",data.toHex());
+}
+void MainWindow::readyRead2()
+{
+    qDebug()<<"void MainWindow::readyRead2()";
+    QDataStream in(client);
+    in.setVersion(QDataStream::Qt_4_0);
+
+    if (blockSize == 0) {
+        if (client->bytesAvailable() < (int)sizeof(quint16))
+            return;
+
+        in >> blockSize;
+    }
+
+    if (client->bytesAvailable() < blockSize)
+        return;
+
+    QString nextFortune;
+    in >> nextFortune;
+    qDebug()<<nextFortune;
+//    if (nextFortune == currentFortune) {
+//        qDebug("re new fortune");
+//        QTimer::singleShot(0, this, SLOT(requestNewFortune()));
+//        return;
+//    }
+
+//    currentFortune = nextFortune;
+//    statusLabel->setText(currentFortune);
+//    getFortuneButton->setEnabled(true);
+    sendFortune();
 }

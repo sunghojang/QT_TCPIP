@@ -232,7 +232,7 @@ void Client::sessionOpened()
 void Client::sendFortune()
 {
     QByteArray block;
-    QDataStream out(&block, QIODevice::WriteOnly);
+    QDataStream out(&block, QIODevice::ReadWrite);
     QStringList fortunes ;
     QString temp;
     fortunes << "wwwdsfefef" <<"efwef";
