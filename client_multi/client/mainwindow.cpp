@@ -138,7 +138,6 @@ Client::Client(QWidget *parent)
 void Client::requestNewFortune()
 {
     qDebug()<<"void Client::requestNewFortune()";
-    getFortuneButton->setEnabled(false);
     blockSize = 0;
     tcpSocket->abort();
     //abort() : disconnection server when any state
@@ -150,6 +149,7 @@ void Client::readFortune()
 {
     qDebug()<<"void Client::readFortune()";
     QDataStream in(tcpSocket);
+    qDebug()<<"client socket : "<<tcpSocket;
     in.setVersion(QDataStream::Qt_4_0);
     QStringList  inQstringData;
     QString temp;
@@ -173,13 +173,14 @@ void Client::readFortune()
         qDebug()<<"in data : "<< temp;
         inQstringData.append(temp);
     }
-
+    blockSize = 0;
     statusLabel->setText(temp);
-    getFortuneButton->setEnabled(true);
+
 }
 
 void Client::displayError(QAbstractSocket::SocketError socketError)
 {
+    qDebug()<<"void Client::displayError(QAbstractSocket::SocketError socketError)";
     switch (socketError) {
     case QAbstractSocket::RemoteHostClosedError:
         break;
@@ -201,11 +202,12 @@ void Client::displayError(QAbstractSocket::SocketError socketError)
                                  .arg(tcpSocket->errorString()));
     }
 
-    getFortuneButton->setEnabled(true);
+
 }
 
 void Client::enableGetFortuneButton()
 {
+    qDebug()<<"enableGetFortuneButton";
     getFortuneButton->setEnabled((!networkSession || networkSession->isOpen()) &&
                                  !hostLineEdit->text().isEmpty() &&
                                  !portLineEdit->text().isEmpty());
