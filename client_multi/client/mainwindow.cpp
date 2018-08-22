@@ -151,6 +151,8 @@ void Client::readFortune()
     qDebug()<<"void Client::readFortune()";
     QDataStream in(tcpSocket);
     in.setVersion(QDataStream::Qt_4_0);
+    QStringList  inQstringData;
+    QString temp;
     long readlengh = 0;
     if (blockSize == 0) {
         readlengh = tcpSocket->bytesAvailable();
@@ -162,28 +164,17 @@ void Client::readFortune()
         in >> blockSize;
         qDebug()<<blockSize;
     }
-    readlengh = tcpSocket->bytesAvailable();
-    qDebug()<<"readlengh2"<<readlengh;
+
     if (readlengh < blockSize)
         return;
 
-    QString nextFortune;
-    in >> nextFortune;
-    qDebug()<<"1 "<<nextFortune;
-    nextFortune = "";
-    in >> nextFortune;
-    qDebug()<<"2 "<<nextFortune;
-    nextFortune = "";
-    in >> nextFortune;
-    qDebug()<<"3 "<<nextFortune;
-//    if (nextFortune == currentFortune) {
-//        qDebug("re new fortune");
-//        QTimer::singleShot(0, this, SLOT(requestNewFortune()));
-//        return;
-//    }
+    while(tcpSocket->bytesAvailable()){
+        in >> temp;
+        qDebug()<<"in data : "<< temp;
+        inQstringData.append(temp);
+    }
 
-    currentFortune = nextFortune;
-    statusLabel->setText(currentFortune);
+    statusLabel->setText(temp);
     getFortuneButton->setEnabled(true);
 }
 
