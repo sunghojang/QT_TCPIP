@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Fri Aug 10 16:59:25 2018
+** Created: Wed Aug 22 11:45:39 2018
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_Client[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   14, // methods
+       6,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -36,6 +36,7 @@ static const uint qt_meta_data_Client[] = {
       54,   42,    7,    7, 0x08,
       97,    7,    7,    7, 0x08,
      122,    7,    7,    7, 0x08,
+     138,    7,    7,    7, 0x08,
 
        0        // eod
 };
@@ -44,6 +45,7 @@ static const char qt_meta_stringdata_Client[] = {
     "Client\0\0requestNewFortune()\0readFortune()\0"
     "socketError\0displayError(QAbstractSocket::SocketError)\0"
     "enableGetFortuneButton()\0sessionOpened()\0"
+    "sendFortune()\0"
 };
 
 void Client::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -57,6 +59,7 @@ void Client::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 2: _t->displayError((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
         case 3: _t->enableGetFortuneButton(); break;
         case 4: _t->sessionOpened(); break;
+        case 5: _t->sendFortune(); break;
         default: ;
         }
     }
@@ -94,9 +97,9 @@ int Client::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 5)
+        if (_id < 6)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 5;
+        _id -= 6;
     }
     return _id;
 }

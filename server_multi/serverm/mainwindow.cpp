@@ -92,12 +92,13 @@ void MainWindow::slotClientDisconnected()
 void MainWindow::sendFortune()
 {
     qDebug()<<"void MainWindow::sendFortune()";
-    qDebug()<<client;
+    QTcpSocket* socket = static_cast<QTcpSocket*>(sender());
+    qDebug()<<socket;
     //test
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
     QStringList fortunes;
-    fortunes << "server to client message";
+    fortunes << "server to socket message";
     out.setVersion(QDataStream::Qt_4_0);
     out << (quint16)0;
     qDebug()<<"q16 :"<<(quint16)0;
@@ -108,15 +109,16 @@ void MainWindow::sendFortune()
     out << (quint16)(block.size() - sizeof(quint16));
     qDebug()<<"size- :"<<(quint16)(block.size() - sizeof(quint16));
 
-    client->write(block);
+    socket->write(block);
     //clientConnection->disconnectFromHost();
 
 }
 void MainWindow::readyRead()
 {
     qDebug()<<"void MainWindow::readyRead()";
-    qDebug()<<client;
-    QByteArray data = client->readAll();
+    QTcpSocket* socket = static_cast<QTcpSocket*>(sender());
+    qDebug()<<socket;
+    QByteArray data = socket->readAll();
 //    QStringList cmmline ;
 //    cmmline.append(data.data());
     qDebug()<<data.toHex();

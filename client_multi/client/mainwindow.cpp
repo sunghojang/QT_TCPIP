@@ -156,17 +156,15 @@ void Client::readFortune()
     long readlengh = 0;
     if (blockSize == 0) {
         readlengh = tcpSocket->bytesAvailable();
-        qDebug()<<"readlengh"<<readlengh;
+        qDebug()<<"readlengh1"<<readlengh;
         if ( readlengh < (int)sizeof(quint16)){
             qDebug()<<"read length is not quint16 size therefore short hex data is not receive";
+            blockSize = 0;
             return;
         }
         in >> blockSize;
-        qDebug()<<blockSize;
+        qDebug()<<"blockSize1 "<<blockSize;
     }
-
-    if (readlengh < blockSize)
-        return;
 
     while(tcpSocket->bytesAvailable()){
         in >> temp;
