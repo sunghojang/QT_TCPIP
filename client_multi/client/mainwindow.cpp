@@ -165,11 +165,13 @@ void Client::readFortune()
         in >> blockSize;
         qDebug()<<"blockSize1 "<<blockSize;
     }
-
-    while(tcpSocket->bytesAvailable()){
+    readlengh = tcpSocket->bytesAvailable();
+    while(readlengh){
+        qDebug()<<"readlengh3"<<readlengh;
         in >> temp;
         qDebug()<<"in data : "<< temp;
         inQstringData.append(temp);
+        readlengh = tcpSocket->bytesAvailable();
     }
     blockSize = 0;
     statusLabel->setText(temp);
@@ -239,19 +241,34 @@ void Client::sessionOpened()
 }
 void Client::sendFortune()
 {
+    st_testcomm_tx = new TestComm();
+    st_testcomm_tx->isserver = 1;
+    st_testcomm_tx->username = "sdjtei";
+    st_testcomm_tx->command = 4;
+    st_testcomm_tx->message = "test";
+    st_testcomm_tx->data = QByteArray::fromHex("FEFF0633064406270645");
+
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
+    QStringList fortunes;
+    QString sdf;
 
-    //out.setVersion(QDataStream::Qt_4_0);
-    //out << (quint16)0;
+    fortunes << "socket to server message";
 
-    out << 0xf1f2f3fe;
-    //out.device()->seek(0);
-    //out << (quint16)(block.size() - sizeof(quint16));
+    out.setVersion(QDataStream::Qt_4_0);
+    out << (quint16)0;
+    qDebug()<<"q16 :"<<(quint16)0;
+    out << QString("%1").arg(st_testcomm_tx->isserver);
+    out << st_testcomm_tx->username;
+    out << QString("%1").arg(st_testcomm_tx->command);
+    out << st_testcomm_tx->message;
+    out << st_testcomm_tx->data;
+    out.device()->seek(0);
+    out << (quint16)(block.size() - sizeof(quint16));
+    qDebug()<<"size- :"<<(quint16)(block.size() - sizeof(quint16));
 
     //connect(tcpSocket, SIGNAL(disconnected()), tcpSocket, SLOT(deleteLater()));
 
     tcpSocket->write(block);
-    qDebug()<<tcpSocket->state();
     //tcpSocket->disconnectFromHost();
 }

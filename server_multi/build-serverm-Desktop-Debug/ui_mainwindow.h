@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue Aug 21 16:52:29 2018
+** Created: Wed Aug 22 16:56:12 2018
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -21,6 +21,7 @@
 #include <QtGui/QMenuBar>
 #include <QtGui/QPushButton>
 #include <QtGui/QStatusBar>
+#include <QtGui/QTextEdit>
 #include <QtGui/QToolBar>
 #include <QtGui/QWidget>
 
@@ -35,6 +36,7 @@ public:
     QLineEdit *port;
     QLabel *portlabel;
     QLabel *showStatusMessage_2;
+    QTextEdit *allhistory;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -61,6 +63,9 @@ public:
         showStatusMessage_2 = new QLabel(centralWidget);
         showStatusMessage_2->setObjectName(QString::fromUtf8("showStatusMessage_2"));
         showStatusMessage_2->setGeometry(QRect(20, 85, 361, 16));
+        allhistory = new QTextEdit(centralWidget);
+        allhistory->setObjectName(QString::fromUtf8("allhistory"));
+        allhistory->setGeometry(QRect(105, 115, 236, 126));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));

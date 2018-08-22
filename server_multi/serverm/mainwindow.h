@@ -19,7 +19,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    double blockSize;
+    quint16 blockSize;
 private slots:
     void on_StartClicked_clicked();
     void newConnection();
@@ -33,6 +33,13 @@ private:
     QTcpSocket* client;
     QList<QTcpSocket*> connections;
     QHash<QTcpSocket*, QBuffer*> buffers;
+    struct TestComm{
+        int isserver;
+        QString username;
+        int command;
+        QString message;
+        QByteArray data;
+    }*st_testcomm_rx;
 };
 
 #endif // MAINWINDOW_H

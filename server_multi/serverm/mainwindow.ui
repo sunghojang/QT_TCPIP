@@ -79,6 +79,16 @@
      <string>state</string>
     </property>
    </widget>
+   <widget class="QTextEdit" name="allhistory">
+    <property name="geometry">
+     <rect>
+      <x>105</x>
+      <y>115</y>
+      <width>236</width>
+      <height>126</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

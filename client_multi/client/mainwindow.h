@@ -82,6 +82,13 @@ private:
     quint16 blockSize;
 
     QNetworkSession *networkSession;
+    struct TestComm{
+        int isserver;
+        QString username;
+        int command;
+        QString message;
+        QByteArray data;
+    }*st_testcomm_tx;
 };
 
 #endif

@@ -43,7 +43,7 @@ void MainWindow::newConnection()
             connection->write(msg);
         }
     }
-
+    qDebug()<<"server"<<server;
     client= server->nextPendingConnection();
     QStringList tmpClientAddressPort;
 
@@ -59,8 +59,8 @@ void MainWindow::newConnection()
     qDebug()<<buffers;
 
     connect(client, SIGNAL(disconnected()), this, SLOT(slotClientDisconnected()));
-    connect(client, SIGNAL(readyRead()) , this, SLOT(readyRead()));
-   //connect(client, SIGNAL(readyRead()) , this, SLOT(readyRead2()));
+    //connect(client, SIGNAL(readyRead()) , this, SLOT(readyRead()));
+   connect(client, SIGNAL(readyRead()) , this, SLOT(readyRead2()));
 
 }
 void MainWindow::slotClientDisconnected()
@@ -103,7 +103,6 @@ void MainWindow::sendFortune()
     out << (quint16)0;
     qDebug()<<"q16 :"<<(quint16)0;
     out << fortunes.at(qrand() % fortunes.size());
-    out << fortunes.at(qrand() % fortunes.size());
     qDebug()<<"at :"<<fortunes.at(qrand() % fortunes.size());
     out.device()->seek(0);
     out << (quint16)(block.size() - sizeof(quint16));
@@ -130,30 +129,33 @@ void MainWindow::readyRead()
 void MainWindow::readyRead2()
 {
     qDebug()<<"void MainWindow::readyRead2()";
-    QDataStream in(client);
+    QTcpSocket* tcpSocket = static_cast<QTcpSocket*>(sender());
+    QDataStream in(tcpSocket);
+    qDebug()<<"client socket : "<<tcpSocket;
     in.setVersion(QDataStream::Qt_4_0);
-
+    QStringList  inQstringData;
+    QString temp;
+    long readlengh = 0;
     if (blockSize == 0) {
-        if (client->bytesAvailable() < (int)sizeof(quint16))
+        readlengh = tcpSocket->bytesAvailable();
+        qDebug()<<"readlengh1"<<readlengh;
+        if ( readlengh < (int)sizeof(quint16)){
+            qDebug()<<"read length is not quint16 size therefore short hex data is not receive";
+            blockSize = 0;
             return;
-
+        }
         in >> blockSize;
+        qDebug()<<"blockSize1 "<<blockSize;
     }
+    readlengh = tcpSocket->bytesAvailable();
+    while(readlengh){
+        in >> temp;
+        qDebug()<<"in data : "<< temp;
+        ui->allhistory->append(temp);
+        inQstringData.append(temp);
+        readlengh = tcpSocket->bytesAvailable();
+    }
+    blockSize = 0;
 
-    if (client->bytesAvailable() < blockSize)
-        return;
-
-    QString nextFortune;
-    in >> nextFortune;
-    qDebug()<<nextFortune;
-//    if (nextFortune == currentFortune) {
-//        qDebug("re new fortune");
-//        QTimer::singleShot(0, this, SLOT(requestNewFortune()));
-//        return;
-//    }
-
-//    currentFortune = nextFortune;
-//    statusLabel->setText(currentFortune);
-//    getFortuneButton->setEnabled(true);
     sendFortune();
 }
