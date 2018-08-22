@@ -54,9 +54,12 @@ Client::Client(QWidget *parent)
     QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
     // use the first non-localhost IPv4 address
     for (int i = 0; i < ipAddressesList.size(); ++i) {
+        qDebug()<<ipAddressesList.at(i);
         if (ipAddressesList.at(i) != QHostAddress::LocalHost &&
             ipAddressesList.at(i).toIPv4Address()) {
             ipAddress = ipAddressesList.at(i).toString();
+            qDebug()<<ipAddress;
+            //not LocalHost, and ip is Ipv4 address
             break;
         }
     }
@@ -65,9 +68,10 @@ Client::Client(QWidget *parent)
         ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
 
     hostLineEdit = new QLineEdit(ipAddress);
-    portLineEdit = new QLineEdit;
+    portLineEdit = new QLineEdit("4002");
+    //"4002" is user prot number
     portLineEdit->setValidator(new QIntValidator(1, 65535, this));
-    portLineEdit->setText("4002");
+    //port number min is 1, max 65535.
     hostLabel->setBuddy(hostLineEdit);
     portLabel->setBuddy(portLineEdit);
 
@@ -77,7 +81,6 @@ Client::Client(QWidget *parent)
     getFortuneButton = new QPushButton(tr("Get Fortune"));
     getFortuneButton->setDefault(true);
     putTextButton = new QPushButton(tr("SEND"));
-
     quitButton = new QPushButton(tr("Quit"));
 
     buttonBox = new QDialogButtonBox;
@@ -87,18 +90,13 @@ Client::Client(QWidget *parent)
 
     tcpSocket = new QTcpSocket(this);
 
-    connect(hostLineEdit, SIGNAL(textChanged(QString)),
-            this, SLOT(enableGetFortuneButton()));
-    connect(portLineEdit, SIGNAL(textChanged(QString)),
-            this, SLOT(enableGetFortuneButton()));
-    connect(getFortuneButton, SIGNAL(clicked()),
-            this, SLOT(requestNewFortune()));
-    connect(putTextButton, SIGNAL(clicked()),
-            this, SLOT(sendFortune()));
+    connect(hostLineEdit, SIGNAL(textChanged(QString)),this, SLOT(enableGetFortuneButton()));
+    connect(portLineEdit, SIGNAL(textChanged(QString)),this, SLOT(enableGetFortuneButton()));
+    connect(getFortuneButton, SIGNAL(clicked()),this, SLOT(requestNewFortune()));
+    connect(putTextButton, SIGNAL(clicked()),this, SLOT(sendFortune()));
     connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
     connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(readFortune()));
-    connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),
-            this, SLOT(displayError(QAbstractSocket::SocketError)));
+    connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),this, SLOT(displayError(QAbstractSocket::SocketError)));
 
     QGridLayout *mainLayout = new QGridLayout;
     mainLayout->addWidget(hostLabel, 0, 0);
@@ -113,6 +111,7 @@ Client::Client(QWidget *parent)
     portLineEdit->setFocus();
 
     QNetworkConfigurationManager manager;
+    // mobile application configuration ex) symbian, maemon, meego
     if (manager.capabilities() & QNetworkConfigurationManager::NetworkSessionRequired) {
         // Get saved network configuration
         QSettings settings(QSettings::UserScope, QLatin1String("Trolltech"));
@@ -138,32 +137,45 @@ Client::Client(QWidget *parent)
 
 void Client::requestNewFortune()
 {
-    qDebug()<<"requestNewFortune";
+    qDebug()<<"void Client::requestNewFortune()";
     getFortuneButton->setEnabled(false);
     blockSize = 0;
     tcpSocket->abort();
+    //abort() : disconnection server when any state
     tcpSocket->connectToHost(hostLineEdit->text(),
                              portLineEdit->text().toInt());
 }
 
 void Client::readFortune()
 {
+    qDebug()<<"void Client::readFortune()";
     QDataStream in(tcpSocket);
     in.setVersion(QDataStream::Qt_4_0);
-
+    long readlengh = 0;
     if (blockSize == 0) {
-        if (tcpSocket->bytesAvailable() < (int)sizeof(quint16))
+        readlengh = tcpSocket->bytesAvailable();
+        qDebug()<<"readlengh"<<readlengh;
+        if ( readlengh < (int)sizeof(quint16)){
+            qDebug()<<"read length is not quint16 size therefore short hex data is not receive";
             return;
-
+        }
         in >> blockSize;
+        qDebug()<<blockSize;
     }
-
-    if (tcpSocket->bytesAvailable() < blockSize)
+    readlengh = tcpSocket->bytesAvailable();
+    qDebug()<<"readlengh2"<<readlengh;
+    if (readlengh < blockSize)
         return;
 
     QString nextFortune;
     in >> nextFortune;
-    qDebug()<<nextFortune;
+    qDebug()<<"1 "<<nextFortune;
+    nextFortune = "";
+    in >> nextFortune;
+    qDebug()<<"2 "<<nextFortune;
+    nextFortune = "";
+    in >> nextFortune;
+    qDebug()<<"3 "<<nextFortune;
 //    if (nextFortune == currentFortune) {
 //        qDebug("re new fortune");
 //        QTimer::singleShot(0, this, SLOT(requestNewFortune()));
@@ -212,18 +224,23 @@ void Client::enableGetFortuneButton()
 void Client::sessionOpened()
 {
     // Save the used configuration
+    qDebug()<<"void Client::sessionOpened()";
     QNetworkConfiguration config = networkSession->configuration();
     QString id;
-    if (config.type() == QNetworkConfiguration::UserChoice)
+    if (config.type() == QNetworkConfiguration::UserChoice){
         id = networkSession->sessionProperty(QLatin1String("UserChoiceConfiguration")).toString();
-    else
+        qDebug()<<"user choice "<<id;
+    }
+    else{
         id = config.identifier();
+        qDebug()<<"other "<<id;
+    }
 
     QSettings settings(QSettings::UserScope, QLatin1String("Trolltech"));
     settings.beginGroup(QLatin1String("QtNetwork"));
     settings.setValue(QLatin1String("DefaultNetworkConfiguration"), id);
     settings.endGroup();
-
+    qDebug()<<settings.allKeys();
     statusLabel->setText(tr("This examples requires that you run the "
                             "Fortune Server example as well."));
 

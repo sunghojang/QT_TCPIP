@@ -102,6 +102,7 @@ void MainWindow::sendFortune()
     out << (quint16)0;
     qDebug()<<"q16 :"<<(quint16)0;
     out << fortunes.at(qrand() % fortunes.size());
+    out << fortunes.at(qrand() % fortunes.size());
     qDebug()<<"at :"<<fortunes.at(qrand() % fortunes.size());
     out.device()->seek(0);
     out << (quint16)(block.size() - sizeof(quint16));
